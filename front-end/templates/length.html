@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Length Converter</title>
+  <link rel="stylesheet" href="/css/output.css"> <!-- Tailwind CSS file -->
+</head>
+<body class="bg-gray-700 flex items-center justify-between min-h-screen flex-col">
+    <nav class="bg-black w-full text-center p-4 font-serif">
+    <a href="/" class="text-white text-4xl">Home</a>
+</nav>
+  <div class="bg-white p-8 rounded-xl shadow-md w-[90%] max-w-md border-2 border-black">
+    <h1 class="text-3xl font-bold mb-6 font-sans text-black">Unit Converter</h1>
+
+    <p class="text-lg font-semibold mb-2 text-black">Enter the length to convert</p>
+    <input id="value" type="text" placeholder="e.g. 5" 
+           class="w-full border-2 border-black rounded-md p-2 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400">
+
+    <p class="text-lg font-semibold mb-2 text-black">Unit to Convert from</p>
+    <select id="fromUnit" class="w-full border-2 border-black rounded-md p-2 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400">
+        <option value="millimeter">Millimeter</option>
+        <option value="centimeter">Centimeter</option>
+        <option value="meter">Meter</option>
+        <option value="kilometer">Kilometer</option>
+        <option value="inch">Inch</option>
+        <option value="foot">Foot</option>
+        <option value="yard">Yard</option>
+        <option value="mile">Mile</option>
+    </select>
+
+    <p class="text-lg font-semibold mb-2 text-black">Unit to Convert to</p>
+    <select id="toUnit" class="w-full border-2 border-black rounded-md p-2 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400">
+        <option value="millimeter">Millimeter</option>
+        <option value="centimeter">Centimeter</option>
+        <option value="meter">Meter</option>
+        <option value="kilometer">Kilometer</option>
+        <option value="inch">Inch</option>
+        <option value="foot">Foot</option>
+        <option value="yard">Yard</option>
+        <option value="mile">Mile</option>
+    </select>
+
+    <p class="text-red-600 hidden">Length can't be 0</p>
+    <button id="submitButton" class="bg-white border-2 border-black text-black px-6 py-2 rounded-md font-semibold hover:bg-gray-100">
+      Convert
+    </button>
+    <div id="result" class="mt-4 p-3 border-2 border-black rounded-md bg-gray-50 text-black font-semibold text-center hidden">
+    
+    </div>
+  </div>
+
+</body>
+<script>
+    document.getElementById("submitButton").addEventListener('click',function(){
+        const length = document.getElementById('value').value.trim();
+        const fromUnit = document.getElementById('fromUnit').value;
+        const toUnit = document.getElementById('toUnit').value;
+        document.getElementById("result").classList.add('hidden');
+        if(!length || Number(length)===0){
+            document.querySelector('p.text-red-600').classList.remove('hidden');
+            return;
+        }
+        document.querySelector('p.text-red-600').classList.add('hidden');
+
+        const data = {
+            "type":"length",
+            "value": Number(length),
+            "fromUnit":fromUnit,
+            "toUnit":toUnit
+        }
+        console.log(data);
+        fetch("http://localhost:8080/convert", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify(data)
+})
+  .then(res => res.json())
+  .then(result => {
+     let resultDiv = document.getElementById("result");
+     resultDiv.textContent = `${fromUnit} -> ${toUnit}: ${result.convertedValue}`; 
+     resultDiv.classList.remove('hidden');
+  });
+    })
+</script>
+</html>

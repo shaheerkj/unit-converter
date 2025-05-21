@@ -1,0 +1,12 @@
+front-end/node_modules/
+
+back-end/.mvn/wrapper/maven-wrapper.jar
+back-end/.mvn/wrapper/maven-wrapper.properties
+back-end/target/
+back-end/.idea/
+
+*.log
+*.class
+*.iml                     
+.DS_Store                 
+.env 
